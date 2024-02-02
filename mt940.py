@@ -38,8 +38,6 @@ class Mt940Writer:
                 transaction.datetime,
                 transaction.amount),
             Mt940.make_86(
-                transaction.iban,
-                transaction.name,
                 transaction.description)
         ])
 
@@ -107,7 +105,7 @@ FORMAT_62F = ':62F:{sign}{date}{currency}{amount}\n'
 FORMAT_61 = ':61:{date}{amount}{magic}\n'
 
 # transaction 2
-FORMAT_86 = ':86:/IBAN/{iban}/NAME/{name}/REMI/{description}\n'
+FORMAT_86 = ':86:/REMI/{description}\n'
 
 MAGIC = 'NTRFNONREF'
 
@@ -160,10 +158,8 @@ class Mt940:
             magic=MAGIC)
 
     @staticmethod
-    def make_86(iban, name, description):
+    def make_86(description):
         return FORMAT_86.format(
-            iban=iban,
-            name=name,
             description=description)
 
     @staticmethod

@@ -28,8 +28,6 @@ DATE_FORMAT = '%Y-%m-%d'
 TIME_FORMAT = '%H:%M:%S'
 DATETIME_FORMAT = DATE_FORMAT + TIME_FORMAT
 
-FEE_NAME = 'Revolut'
-FEE_IBAN = ''
 FEE_DESCRIPTION_FORMAT = 'Bank transaction fee {}'
 FEE_DATETIME_DELTA = timedelta(seconds=1)
 
@@ -89,12 +87,8 @@ class RevolutCsvReader:
         amount, fee, balance = \
             float(amount_str), float(fee_str), float(balance_str)
 
-        name = "" # Field not present in CSV. Re-add later once Revolut re-adds it in their next CSV format change.
-
         transaction_without_fee = Transaction(
             amount=amount,
-            name=_santize_name(name),
-            iban=iban,
             description=re.sub("\s+", " " , (
                 ('Transfer to' if type_str == "TRANSFER" else 'Money added from') +
                 f' {iban} {_sanitize_name(description)}: {reference}'
@@ -119,8 +113,6 @@ class RevolutCsvReader:
     def _make_fee_transaction(self, completed_datetime, balance, fee):
         return Transaction(
             amount=fee,
-            name=FEE_NAME,
-            iban=FEE_IBAN,
             # include timestamp of transaction to make sure that SnelStart
             # does not detect similar transactions as the same one
             description=FEE_DESCRIPTION_FORMAT.format(int(completed_datetime.timestamp())),
