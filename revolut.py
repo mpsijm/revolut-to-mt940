@@ -89,7 +89,7 @@ class RevolutCsvReader:
 
         transaction_without_fee = Transaction(
             amount=amount,
-            description=re.sub("\s+", " " , (
+            description=re.sub(r"\s+", " " , (
                 ('Transfer to' if type_str == "TRANSFER" else 'Money added from') +
                 f' {iban} {_sanitize_name(description)}: {reference}'
             ).strip()),
